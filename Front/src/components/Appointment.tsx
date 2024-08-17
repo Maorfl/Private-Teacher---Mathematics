@@ -279,7 +279,9 @@ const Appointment: FunctionComponent<AppointmentProps> = ({ user }) => {
                                             <option value={"0"} disabled>
                                                 אפשרויות בחירה
                                             </option>
-                                            <option value="student">בית התלמיד</option>
+                                            <option value="student" disabled={false}>
+                                                בית התלמיד
+                                            </option>
                                             <option value="teacher">בית המורה</option>
                                             <option value="zoom">זום</option>
                                         </Form.Select>

@@ -2,8 +2,8 @@ const CACHE_NAME = "michaioffe";
 
 // Assets to pre-cache (e.g., static assets, index.html, etc.)
 const urlsToCache = [
-    "/",
     "/index.html",
+    "/service-worker.js",
     "/manifest.json",
     "/src/assets/icons/icon-32.ico",
     "/src/assets/images/logo-144.png",
