@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import Lesson from "@/interfaces/Lesson";
 import { lessonService } from "./lessonService";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -14,9 +15,9 @@ export const appointmentService = {
     dateToString2,
     isFirstDateGreater,
     compareTimes,
-    addFifteenMinutesToDateTimeString
-}
-
+    addFifteenMinutesToDateTimeString,
+    isStudentHome,
+};
 
 function addOneHour(dateTimeString: string) {
     const date = new Date(dateTimeString.replace(" ", "T") + ":00Z");
@@ -33,8 +34,8 @@ function addOneHour(dateTimeString: string) {
 }
 
 function generateRandomId() {
-    const min = 100000; // Smallest 6-digit number
-    const max = 999999; // Largest 6-digit number
+    const min = 100000;
+    const max = 999999;
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
@@ -43,7 +44,7 @@ function dateToString(date: Date): string {
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     const hours = String(date.getHours()).padStart(2, "0");
-    const minutes = String(date.getMinutes()).padStart(2, "0");  
+    const minutes = String(date.getMinutes()).padStart(2, "0");
 
     return `${year}-${month}-${day} ${hours}:${minutes}`;
 }
@@ -52,31 +53,32 @@ function dateToString2(date: Date): string {
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     const hours = String(date.getHours()).padStart(2, "0");
-    const minutes = String(date.getMinutes()).padStart(2, "0");  
+    const minutes = String(date.getMinutes()).padStart(2, "0");
 
     return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
 
-async function dateAppointment(dateTimeObj:Date,calendarEvents:any) {
+async function dateAppointment(dateTimeObj: Date, calendarEvents: any) {
     const id = appointmentService.generateRandomId();
-    const datetime:string = appointmentService.dateToString(dateTimeObj);
-    
+    const datetime: string = appointmentService.dateToString(dateTimeObj);
+
     calendarEvents.add({
         id: id,
         start: datetime,
         end: appointmentService.addOneHour(datetime),
         title: "פנוי",
-        calendarId: "open"});
+        calendarId: "open",
+    });
 
     const lesson = calendarEvents.get(id);
 
     await lessonService.addLesson(lesson);
-    }
+}
 
-async function deleteEvent(id:string,calendarEvents:any) {
+async function deleteEvent(id: string, calendarEvents: any) {
     await lessonService.deleteLesson(id);
 
-    calendarEvents.remove(id)
+    calendarEvents.remove(id);
 }
 
 function getDateFromString(dateString: string): Date {
@@ -94,13 +96,13 @@ function convertHoursToString(minutes: number): string {
 }
 
 function convertCurrentHourToTime(timeStr: string): Date {
-    const [hours, minutes] = timeStr.split(':').map(Number);
+    const [hours, minutes] = timeStr.split(":").map(Number);
     const date = new Date();
     date.setHours(hours);
     date.setMinutes(minutes);
     date.setSeconds(0);
     date.setMilliseconds(0);
-    
+
     return date;
 }
 
@@ -120,9 +122,9 @@ function isFirstDateGreater(date1: string, date2: string): boolean {
 }
 
 function compareTimes(time1: string, time2: string): boolean {
-    const [hours1, minutes1] = time1.split(":")
-    const [hours2, minutes2] = time2.split(":")
-        
+    const [hours1, minutes1] = time1.split(":");
+    const [hours2, minutes2] = time2.split(":");
+
     return hours1 === hours2 && minutes1 === minutes2;
 }
 
@@ -138,4 +140,13 @@ function addFifteenMinutesToDateTimeString(dateTimeString: string): string {
     const minutes = String(date.getUTCMinutes()).padStart(2, "0");
 
     return `${year}-${month}-${day} ${hours}:${minutes}`;
+}
+
+function isStudentHome(lessonsArray: Lesson[]): boolean {
+    if (lessonsArray.length === 0) return true;
+    for (let i = 0; i < lessonsArray.length; i++) {
+        if (lessonsArray[i].calendarId !== "open") return true;
+    }
+
+    return false;
 }

@@ -14,6 +14,7 @@ import { appointmentService } from "../services/appointmentService";
 import User from "../interfaces/User";
 import Lesson from "../interfaces/Lesson";
 import { lessonService } from "../services/lessonService";
+import PricesCatalog from "./PricesCatalog";
 
 interface AppointmentProps {
     user: User | null;
@@ -29,9 +30,10 @@ const Appointment: FunctionComponent<AppointmentProps> = ({ user }) => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [calendarEvent, setCalendarEvent] = useState<any>();
     const [selectedPlace, setSelectedPlace] = useState("בית התלמיד");
+    const [isChanged, setIsChanged] = useState(false);
+    const [isStudentHome, setIsStudentHome] = useState(false);
     const selectedSubjectRef = useRef<HTMLSelectElement>(null);
     const selectedPlaceRef = useRef<HTMLSelectElement>(null);
-    const [isChanged, setIsChanged] = useState(false);
 
     const closedColors = {
         main: "#969696",
@@ -66,11 +68,15 @@ const Appointment: FunctionComponent<AppointmentProps> = ({ user }) => {
         setShowLessonModal(true);
     };
 
-    const handleSelectClose = () => setSelectModalShow(false);
+    const handleSelectClose = () => {
+        setIsStudentHome(false);
+        setSelectModalShow(false);
+    };
 
-    const handleSelectShow = (calendarEvent: any) => {
+    const handleSelectShow = async (calendarEvent: any) => {
         setCalendarEvent(calendarEvent);
         setSelectModalShow(true);
+        await handleTodayLessons(calendarEvent);
     };
 
     const handleDeleteShow = (calendarEvent: any) => {
@@ -100,24 +106,42 @@ const Appointment: FunctionComponent<AppointmentProps> = ({ user }) => {
         setSelectedPlace(selectedOption as string);
     };
 
+    const createSortedLessons = async (calendarEvent: any) => {
+        let todayLessons = await lessonService.getDayLessons(calendarEvent.start.substring(0, 10));
+        const lesson = todayLessons.find((lesson: Lesson) => {
+            return lesson.end === calendarEvent.start && lesson.calendarId !== "open";
+        });
+        if (lesson) return [];
+
+        todayLessons = todayLessons.sort((a: Lesson, b: Lesson) => {
+            return new Date(a.end).getTime() - new Date(b.end).getTime();
+        });
+        todayLessons = todayLessons.filter((lesson: Lesson) => {
+            return appointmentService.isFirstDateGreater(lesson.end, calendarEvent.start);
+        });
+        for (let i = 0; i < todayLessons.length - 1; i++) {
+            if (todayLessons[i].end !== todayLessons[i + 1].start) {
+                todayLessons = todayLessons.slice(0, i + 1);
+                break;
+            }
+            if (i === todayLessons.length - 2) {
+                todayLessons = todayLessons.slice(0, i + 2);
+            }
+        }
+        return todayLessons;
+    };
+
+    const handleTodayLessons = async (calendarEvent: any) => {
+        const todayLessons = await createSortedLessons(calendarEvent);
+        const is = appointmentService.isStudentHome(todayLessons);
+
+        setIsStudentHome(is);
+    };
+
     const handleNextLessons = async () => {
         if (selectedPlace === "בית התלמיד") {
-            let todayLessons = await lessonService.getDayLessons(calendarEvent.start.substring(0, 10));
-            todayLessons = todayLessons.filter((lesson: Lesson) => {
-                return appointmentService.isFirstDateGreater(lesson.end, calendarEvent.start);
-            });
-            todayLessons = todayLessons.sort((a: Lesson, b: Lesson) => {
-                return new Date(a.end).getTime() - new Date(b.end).getTime();
-            });
-            for (let i = 0; i < todayLessons.length - 1; i++) {
-                if (todayLessons[i].end !== todayLessons[i + 1].start) {
-                    todayLessons = todayLessons.slice(1, i + 1);
-                    break;
-                }
-                if (i === todayLessons.length - 2) {
-                    todayLessons = todayLessons.slice(1, i + 2);
-                }
-            }
+            const todayLessons = await createSortedLessons(calendarEvent);
+            todayLessons.splice(0, 1);
             todayLessons.forEach(async (lesson: Lesson) => {
                 lesson.start = appointmentService.addFifteenMinutesToDateTimeString(lesson.start);
                 lesson.end = appointmentService.addFifteenMinutesToDateTimeString(lesson.end);
@@ -241,7 +265,8 @@ const Appointment: FunctionComponent<AppointmentProps> = ({ user }) => {
                     <Modal show={selectModalShow} onHide={handleSelectClose}>
                         <div dir="rtl">
                             <Modal.Header>
-                                <Modal.Title>קביעת שיעור</Modal.Title>
+                                <Modal.Title className="text-nowrap">קביעת שיעור</Modal.Title>
+                                <PricesCatalog />
                             </Modal.Header>
                             <Modal.Body>
                                 <Form>
@@ -251,7 +276,7 @@ const Appointment: FunctionComponent<AppointmentProps> = ({ user }) => {
                                             ref={selectedSubjectRef}
                                             aria-label="Default select example"
                                             onChange={handleSelectChange}>
-                                            <option value={"0"} disabled>
+                                            <option disabled value={"0"}>
                                                 אפשרויות בחירה
                                             </option>
                                             <option value="1">הכנה לבגרות</option>
@@ -275,11 +300,12 @@ const Appointment: FunctionComponent<AppointmentProps> = ({ user }) => {
                                         <Form.Select
                                             ref={selectedPlaceRef}
                                             aria-label="Default select example"
+                                            defaultValue={"teacher"}
                                             onChange={handleSelectedPlace}>
                                             <option value={"0"} disabled>
                                                 אפשרויות בחירה
                                             </option>
-                                            <option value="student" disabled={false}>
+                                            <option value="student" disabled={isStudentHome}>
                                                 בית התלמיד
                                             </option>
                                             <option value="teacher">בית המורה</option>
@@ -287,10 +313,15 @@ const Appointment: FunctionComponent<AppointmentProps> = ({ user }) => {
                                         </Form.Select>
                                     </Form.Group>
                                 </Form>
+                                <p className={`${!isStudentHome && "hidden"}`}>
+                                    <b>
+                                        *לקביעת השיעור הנבחר <u>בבית התלמיד</u> נא צרו קשר
+                                    </b>
+                                </p>
                             </Modal.Body>
                             <Modal.Footer>
                                 <Button variant="secondary" onClick={handleSelectClose}>
-                                    סגירה
+                                    ביטול
                                 </Button>
                                 <Button
                                     className={`${
@@ -363,7 +394,7 @@ const Appointment: FunctionComponent<AppointmentProps> = ({ user }) => {
                             </Modal.Body>
                             <Modal.Footer>
                                 <Button variant="secondary" onClick={handleLessonClose}>
-                                    סגירה
+                                    ביטול
                                 </Button>
                                 <Button
                                     variant="primary"
@@ -414,7 +445,7 @@ const Appointment: FunctionComponent<AppointmentProps> = ({ user }) => {
                                 .substring(0, currentDateTime.toLocaleString().length - 6)}`}</Modal.Body>
                             <Modal.Footer>
                                 <Button variant="secondary" onClick={handleDeleteClose}>
-                                    סגירה
+                                    ביטול
                                 </Button>
                                 <Button
                                     variant="danger"
