@@ -26,8 +26,8 @@ const EntryPage: FunctionComponent<EntryPageProps> = ({ setUser }) => {
 
     const handleSignUp = async (e: React.FormEvent, userInfo: User) => {
         e.preventDefault();
-        await authService.signup(userInfo);
-        setUser(userInfo);
+        const user = await authService.signup(userInfo);
+        setUser(user);
         navigate("/");
     };
     const handleLogIn = async (e: React.FormEvent) => {
