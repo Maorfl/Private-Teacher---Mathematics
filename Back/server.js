@@ -22,6 +22,8 @@ if (process.env.NODE_ENV === "production") {
 
     app.use(express.static(path.resolve(__dirname, "public")));
 } else {
+    console.log("development");
+
     const corsOptions = {
         origin: [
             "http://127.0.0.1:5173",
