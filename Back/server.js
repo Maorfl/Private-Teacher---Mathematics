@@ -64,7 +64,7 @@ setInterval(async () => {
             await telegramService.sendReminder(student, title, time);
         }
     }
-}, 1000 * 60 * 15);
+}, 1000 * 60 * 30);
 
 const port = process.env.PORT || 3000;
 

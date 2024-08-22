@@ -6,16 +6,6 @@ async function sendMessage(req, res) {
     res.status(200).send("הודעה נשלחה בהצלחה");
 }
 
-async function sendReminder(req, res) {
-    try {
-        await telegramService.sendReminder(req.body.student, req.body.title, req.body.time);
-
-        res.status(200).send("תזכורת נשלחה בהצלחה");
-    } catch (error) {
-        res.status(401).send(error);
-    }
-}
-
 async function messageHandler(req, method) {
     const { body } = req;
     if (body) {
@@ -25,4 +15,4 @@ async function messageHandler(req, method) {
     return;
 }
 
-module.exports = { sendMessage, messageHandler, sendReminder };
+module.exports = { sendMessage, messageHandler };
