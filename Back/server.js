@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const path = require("path");
 require("dotenv").config();
 const telegramController = require("./api/telegram/telegram.controller");
 const telegramService = require("./api/telegram/telegram.service");
@@ -18,12 +19,8 @@ app.use(express.json());
 app.use(express.static("public"));
 
 if (process.env.NODE_ENV === "production") {
-    console.log("production");
-
     app.use(express.static(path.resolve(__dirname, "public")));
 } else {
-    console.log("development");
-
     const corsOptions = {
         origin: [
             "http://127.0.0.1:5173",
