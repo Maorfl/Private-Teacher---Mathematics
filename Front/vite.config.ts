@@ -26,6 +26,11 @@ export default defineConfig({
                         type: "image/png",
                     },
                     {
+                        src: "/src/assets/images/logo-320.png",
+                        sizes: "320x320",
+                        type: "image/png",
+                    },
+                    {
                         src: "/src/assets/images/logo-512.png",
                         sizes: "512x512",
                         type: "image/png",
