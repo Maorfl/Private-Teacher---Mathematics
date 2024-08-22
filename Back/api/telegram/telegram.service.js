@@ -16,7 +16,7 @@ async function sendMessage(messageObj, messageText) {
 async function sendMessageToMicha(text) {
     try {
         return await axiosService.getAxiosInstance().get("sendMessage", {
-            chat_id: 375866726,
+            chat_id: 1246475581,
             text,
             parse_mode: "html",
         });
@@ -57,7 +57,7 @@ async function sendMessageToStudent(messageDetails) {
 async function contactMessage(messageDetails) {
     try {
         return await axiosService.getAxiosInstance().get("sendMessage", {
-            chat_id: 375866726,
+            chat_id: 1246475581,
             text: `<b>קיבלת הודעה חדשה - יצירת קשר</b>\n\n<b>שם מלא:</b> ${messageDetails.fullname}\n<b>טלפון:</b> ${messageDetails.phone}\n<b>אימייל:</b> ${messageDetails.email}\n<b>הודעה:</b> ${messageDetails.message}`,
             parse_mode: "html",
         });
