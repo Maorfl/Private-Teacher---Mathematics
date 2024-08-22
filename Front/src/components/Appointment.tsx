@@ -23,13 +23,13 @@ interface AppointmentProps {
 const Appointment: FunctionComponent<AppointmentProps> = ({ user }) => {
     const [currentDateTime] = useState(new Date());
     const [selectModalShow, setSelectModalShow] = useState(false);
-    const [selectedLesson, setSelectedLesson] = useState("הכנה לבגרות");
+    const [selectedLesson, setSelectedLesson] = useState("חטיבה (ז׳-ט׳)");
     const [selectedHour, setSelectedHour] = useState("");
     const [otherLesson, setOtherLesson] = useState("");
     const [showLessonModal, setShowLessonModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [calendarEvent, setCalendarEvent] = useState<any>();
-    const [selectedPlace, setSelectedPlace] = useState("בית התלמיד");
+    const [selectedPlace, setSelectedPlace] = useState("בית המורה");
     const [isChanged, setIsChanged] = useState(false);
     const [isStudentHome, setIsStudentHome] = useState(false);
     const selectedSubjectRef = useRef<HTMLSelectElement>(null);
@@ -279,9 +279,11 @@ const Appointment: FunctionComponent<AppointmentProps> = ({ user }) => {
                                             <option disabled value={"0"}>
                                                 אפשרויות בחירה
                                             </option>
-                                            <option value="1">הכנה לבגרות</option>
-                                            <option value="2">חדוא</option>
-                                            <option value="3">העולם שטוח</option>
+                                            <option value="1">חטיבה (ז׳-ט׳)</option>
+                                            <option value="2">תיכון (י׳-יב׳)</option>
+                                            <option value="3">מכינה וסטודנטים</option>
+                                            <option value="4">חדו״א להנדסה</option>
+                                            <option value="5">טורים התמרות ומשוואות דיפרנציאליות</option>
                                             <option value="other">אחר</option>
                                         </Form.Select>
                                         {selectedLesson === "אחר" && (
@@ -313,9 +315,9 @@ const Appointment: FunctionComponent<AppointmentProps> = ({ user }) => {
                                         </Form.Select>
                                     </Form.Group>
                                 </Form>
-                                <p className={`${!isStudentHome && "hidden"}`}>
+                                <p className={`${!isStudentHome && "hidden"} text-sm`}>
                                     <b>
-                                        *לקביעת השיעור הנבחר <u>בבית התלמיד</u> נא צרו קשר
+                                        *לקביעת השיעור בשעה הנבחרת <u>בבית התלמיד</u> נא צרו קשר
                                     </b>
                                 </p>
                             </Modal.Body>
@@ -326,8 +328,8 @@ const Appointment: FunctionComponent<AppointmentProps> = ({ user }) => {
                                 <Button
                                     className={`${
                                         (selectedLesson === "other" && !otherLesson) ||
-                                        selectedPlace === "0" ||
-                                        selectedLesson === "0"
+                                        selectedPlace === "אפשרויות בחירה" ||
+                                        selectedLesson === "אפשרויות בחירה"
                                             ? "disabled"
                                             : ""
                                     }`}
@@ -360,7 +362,6 @@ const Appointment: FunctionComponent<AppointmentProps> = ({ user }) => {
                         </div>
                     </Modal>
 
-                    {/* לחיצה על מקום ריק */}
                     <Modal show={showLessonModal} onHide={handleLessonClose}>
                         <div dir="rtl">
                             <Modal.Header>

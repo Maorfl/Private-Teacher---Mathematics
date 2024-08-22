@@ -1,7 +1,7 @@
 import User from "../interfaces/User";
 import axiosService from "./axiosService";
 
-const ENDPOINT = "/auths"
+const ENDPOINT = "/auths";
 
 const STORAGE_KEY: string = "userInfo";
 
@@ -9,12 +9,12 @@ export const authService = {
     login,
     getLoggedInUser,
     logout,
-    signup
-}
+    signup,
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function saveToSessionStorage(key: string, val: any): void {
-    sessionStorage[key] = JSON.stringify(val)
+    sessionStorage[key] = JSON.stringify(val);
 }
 
 function getLoggedInUser(): User | null {
@@ -28,8 +28,8 @@ function logout(): void {
 async function login(email: string): Promise<User> {
     // eslint-disable-next-line no-useless-catch
     try {
-        const loggedInUser: User = await axiosService.post(`${ENDPOINT}/login`, {email});
-        saveToSessionStorage(STORAGE_KEY, loggedInUser);
+        const loggedInUser: User = await axiosService.post(`${ENDPOINT}/login`, { email });
+        if (loggedInUser) saveToSessionStorage(STORAGE_KEY, loggedInUser);
 
         return loggedInUser;
     } catch (error) {

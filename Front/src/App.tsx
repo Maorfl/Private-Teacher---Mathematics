@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./style/App.scss";
 import Home from "./components/Home";

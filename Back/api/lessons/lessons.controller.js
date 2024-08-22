@@ -63,9 +63,20 @@ async function deleteLesson(req, res) {
     }
 }
 
+async function getUserByFullname(req, res) {
+    try {
+        const user = await lessonsService.getUserByFullname(req.params.fullname);
+
+        res.status(200).json(user);
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+}
+
 module.exports = {
     getLessons,
     addLesson,
     updateLesson,
     deleteLesson,
+    getUserByFullname,
 };

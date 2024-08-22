@@ -3,6 +3,9 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
 const telegramController = require("./api/telegram/telegram.controller");
+const telegramService = require("./api/telegram/telegram.service");
+const lessonService = require("./api/lessons/lessons.service");
+const utilService = require("./util.service");
 
 const app = express();
 
@@ -45,6 +48,23 @@ app.use("/api/", telegramRoutes);
 app.post("*", async (req, res) => {
     if (req.body.message) res.send(await telegramController.messageHandler(req));
 });
+
+setInterval(async () => {
+    const todayLessons = await lessonService.getLessons(new Date().toISOString().substring(0, 10));
+    const lesson = todayLessons.find((lesson) => {
+        return utilService.isHalfHourMoreThanNow(lesson.start);
+    });
+
+    if (lesson) {
+        const student = await lessonService.getUserByFullname(lesson.student[0]);
+        if (student.chatId) {
+            const title = lesson.title.substring(student.fullname.length + 3);
+            const time = lesson.start.substring(11);
+
+            await telegramService.sendReminder(student, title, time);
+        }
+    }
+}, 1000 * 60 * 15);
 
 const port = process.env.PORT || 3000;
 

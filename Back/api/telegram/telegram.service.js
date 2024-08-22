@@ -25,6 +25,18 @@ async function sendMessageToMicha(text) {
     }
 }
 
+async function sendReminder(student, title, time) {
+    try {
+        await axiosService.getAxiosInstance().get("sendMessage", {
+            chat_id: student.chatId,
+            text: `<b>שלום ${student.fullname}!</b>\nזוהי תזכורת לגבי השיעור שקבעת בנושא: ${title}\nהשיעור מתחיל בשעה: <b>${time}</b>`,
+            parse_mode: "html",
+        });
+    } catch (error) {
+        throw error;
+    }
+}
+
 async function sendMessageToStudent(messageDetails) {
     try {
         const user = await userService.getUserByPhone(messageDetails.phone);
@@ -93,4 +105,5 @@ module.exports = {
     sendMessage,
     sendMessageToMicha,
     sendMessageToStudent,
+    sendReminder,
 };

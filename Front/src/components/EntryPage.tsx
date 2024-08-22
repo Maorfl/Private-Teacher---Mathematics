@@ -50,6 +50,7 @@ const EntryPage: FunctionComponent<EntryPageProps> = ({ setUser }) => {
                 theme: "light",
                 transition: Bounce,
             });
+            throw new Error("סיסמא לא נכונה");
         }
     };
 

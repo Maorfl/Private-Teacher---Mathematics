@@ -1,10 +1,9 @@
 /* eslint-disable no-useless-catch */
+import User from "@/interfaces/User";
 import Lesson from "../interfaces/Lesson";
 import axiosService from "./axiosService";
 
-
 const ENDPOINT = "/lessons";
-
 
 async function getLessons(): Promise<Lesson[]> {
     try {
@@ -16,7 +15,7 @@ async function getLessons(): Promise<Lesson[]> {
 
 async function getDayLessons(datetime: string): Promise<Lesson[]> {
     try {
-        return await axiosService.get(ENDPOINT, {datetime});
+        return await axiosService.get(ENDPOINT, { datetime });
     } catch (error) {
         throw error;
     }
@@ -32,7 +31,7 @@ async function addLesson(lesson: Lesson): Promise<Lesson> {
 
 async function updateLesson(lesson: Lesson, phone: string, isToUpdate: boolean): Promise<Lesson> {
     try {
-        return await axiosService.put(`${ENDPOINT}/${lesson.id}`, {lesson, phone, isToUpdate});
+        return await axiosService.put(`${ENDPOINT}/${lesson.id}`, { lesson, phone, isToUpdate });
     } catch (error) {
         throw error;
     }
@@ -46,11 +45,19 @@ async function deleteLesson(id: string): Promise<Lesson> {
     }
 }
 
+async function getUserByFullname(fullname: string): Promise<User> {
+    try {
+        return await axiosService.get(`${ENDPOINT}/${fullname}`);
+    } catch (error) {
+        throw error;
+    }
+}
 
 export const lessonService = {
     getLessons,
     getDayLessons,
     addLesson,
     updateLesson,
-    deleteLesson
-}
+    deleteLesson,
+    getUserByFullname,
+};

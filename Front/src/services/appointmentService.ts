@@ -17,6 +17,7 @@ export const appointmentService = {
     compareTimes,
     addFifteenMinutesToDateTimeString,
     isStudentHome,
+    isHalfHourMoreThanNow,
 };
 
 function addOneHour(dateTimeString: string) {
@@ -149,4 +150,12 @@ function isStudentHome(lessonsArray: Lesson[]): boolean {
     }
 
     return false;
+}
+
+function isHalfHourMoreThanNow(dateTimeString: string): boolean {
+    const date = new Date(dateTimeString.replace(" ", "T") + ":00Z");
+    const now = new Date();
+    now.setMinutes(now.getMinutes() + 30);
+
+    return date.getTime() === now.getTime();
 }
