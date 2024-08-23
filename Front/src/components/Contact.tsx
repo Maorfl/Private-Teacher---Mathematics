@@ -49,7 +49,7 @@ const Contact: FunctionComponent<ContactProps> = () => {
     return (
         <>
             <div className="lg:w-1/4 md:w-1/2 w-4/5 m-auto">
-                <div className="mt-10 py-5 bg-slate-500 border-2 border-violet-900 rounded-3xl shadow">
+                <div className="mt-3 py-5 bg-slate-500 border-2 border-violet-900 rounded-3xl shadow">
                     <h2 className="text-4xl text-center font-semibold underline text-white mb-4 p-0">צור קשר</h2>
                     <form onSubmit={(e) => handleSubmit(e)} dir="rtl" className="lg:w-8/12 md:w-7/12 w-9/12 m-auto">
                         <div className="flex border rounded items-center mb-4">
@@ -98,12 +98,11 @@ const Contact: FunctionComponent<ContactProps> = () => {
                     </form>
                 </div>
             </div>
-            <div className="w-full text-center mt-3 mb-3">
-                <h2 className="p-0 text-2xl font-semibold mb-2">WhatsApp</h2>
+            <div className="w-full text-center mt-2">
+                <h2 className="p-0 text-xl font-semibold mb-1">WhatsApp</h2>
                 <FontAwesomeIcon
                     icon={faWhatsapp}
                     className="text-5xl text-green-500 cursor-pointer"
-                    size="3x"
                     onClickCapture={() => window.open(`https://wa.me/972587091995?text=${message}`)}
                 />
             </div>

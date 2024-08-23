@@ -17,7 +17,6 @@ const EntryPage: FunctionComponent<EntryPageProps> = ({ setUser }) => {
     const [password, setPassword] = useState<string>("");
     const [fullname, setFullname] = useState<string>("");
     const [phone, setPhone] = useState<string>("");
-    const [checkedUser, setCheckedUser] = useState<any>();
     const navigate = useNavigate();
 
     const changeView = (view: string) => {
@@ -57,14 +56,16 @@ const EntryPage: FunctionComponent<EntryPageProps> = ({ setUser }) => {
     const handlePWReset = async (e: React.FormEvent) => {
         e.preventDefault();
         const user = await authService.login(email);
-        setCheckedUser(user);
+        const userPassword: any = jwtDecode(user.password);
+
+        setPassword(userPassword.password);
+        changeView("ShowPW");
     };
 
     const handleCopyPW = (e: React.FormEvent) => {
         e.preventDefault();
-        const userPassword: string = jwtDecode(checkedUser.password);
         navigator.clipboard
-            .writeText(userPassword)
+            .writeText(password)
             .then(() => {
                 toast.success("הסיסמא הועתקה בהצלחה!", {
                     position: "top-center",
@@ -229,7 +230,9 @@ const EntryPage: FunctionComponent<EntryPageProps> = ({ setUser }) => {
                                 </li>
                                 <li>
                                     <i />
-                                    <a onClick={() => changeView("PWReset")}>שכחתי סיסמא ?</a>
+                                    <div className="clickable text-blue-700" onClick={() => changeView("PWReset")}>
+                                        שכחתי סיסמא ?
+                                    </div>
                                 </li>
                             </ul>
                         </fieldset>
@@ -262,13 +265,13 @@ const EntryPage: FunctionComponent<EntryPageProps> = ({ setUser }) => {
                 );
             case "ShowPW":
                 return (
-                    <div dir="rtl">
+                    <form dir="rtl">
                         <h2>שכחתי סיסמא</h2>
                         <fieldset>
                             <legend>שחזור סיסמא</legend>
                             <ul>
                                 <li>
-                                    <label htmlFor="email">סיסמתך:</label>
+                                    <p>סיסמתך: {password}</p>
                                 </li>
                             </ul>
                         </fieldset>
@@ -278,7 +281,7 @@ const EntryPage: FunctionComponent<EntryPageProps> = ({ setUser }) => {
                         <button type="button" onClick={() => changeView("logIn")}>
                             לחזור אחורה
                         </button>
-                    </div>
+                    </form>
                 );
             default:
                 return null;
