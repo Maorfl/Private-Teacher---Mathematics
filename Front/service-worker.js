@@ -1,9 +1,7 @@
 const CACHE_NAME = "michaioffe";
 
 // Assets to pre-cache (e.g., static assets, index.html, etc.)
-const urlsToCache = [
-    // Add additional static assets here
-];
+const urlsToCache = ["index.html", "src/components/Home.tsx"];
 
 // Install event - caching static assets
 self.addEventListener("install", (event) => {
