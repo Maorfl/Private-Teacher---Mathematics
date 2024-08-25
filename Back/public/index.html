@@ -15,7 +15,7 @@
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/assets/sw.js')
+          navigator.serviceWorker.register('/registerSW')
           .then((registration) => {})
           .catch((error) => {
             console.error('Service Worker registration failed:', error);
