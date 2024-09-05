@@ -21,6 +21,22 @@ async function getLessons(datetime = "") {
     }
 }
 
+async function getUpcomingLessons() {
+    try {
+        const today = new Date();
+        const lessons = await Lesson.find({}).select("-__v").select("-_id");
+
+        const filteredLessons = lessons.filter((lesson) => {
+            const lessonDate = new Date(lesson.start.substring(0, 10));
+            return lessonDate.getTime() >= today.getTime() - 86400000;
+        });
+
+        return filteredLessons;
+    } catch (error) {
+        throw error;
+    }
+}
+
 async function addLesson(lesson) {
     try {
         const newLesson = new Lesson(lesson);
@@ -65,4 +81,5 @@ module.exports = {
     updateLesson,
     deleteLesson,
     getUserByFullname,
+    getUpcomingLessons,
 };

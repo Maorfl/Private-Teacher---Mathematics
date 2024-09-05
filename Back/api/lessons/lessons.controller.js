@@ -14,6 +14,15 @@ async function getLessons(req, res) {
     }
 }
 
+async function getUpcomingLessons(req, res) {
+    try {
+        const lessons = await lessonsService.getUpcomingLessons();
+        res.json(lessons);
+    } catch (error) {
+        res.status(500).send(err.message);
+    }
+}
+
 async function addLesson(req, res) {
     try {
         const addedLesson = await lessonsService.addLesson(req.body);
@@ -79,4 +88,5 @@ module.exports = {
     updateLesson,
     deleteLesson,
     getUserByFullname,
+    getUpcomingLessons,
 };

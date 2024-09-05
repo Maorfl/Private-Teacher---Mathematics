@@ -48,8 +48,8 @@ const Contact: FunctionComponent<ContactProps> = () => {
 
     return (
         <>
-            <div className="lg:w-1/4 md:w-1/2 w-4/5 m-auto">
-                <div className="mt-3 py-5 bg-slate-500 border-2 border-violet-900 rounded-3xl shadow">
+            <div className="lg:w-1/4 md:w-1/2 w-4/5 m-auto pt-24">
+                <div className="py-5 bg-slate-500 border-2 border-violet-900 rounded-3xl shadow">
                     <h2 className="text-4xl text-center font-semibold underline text-white mb-4 p-0">צור קשר</h2>
                     <form onSubmit={(e) => handleSubmit(e)} dir="rtl" className="lg:w-8/12 md:w-7/12 w-9/12 m-auto">
                         <div className="flex border rounded items-center mb-4">

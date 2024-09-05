@@ -13,6 +13,14 @@ async function getLessons(): Promise<Lesson[]> {
     }
 }
 
+async function getUpcomingLessons(): Promise<Lesson[]> {
+    try {
+        return await axiosService.get(`${ENDPOINT}/today-on`);
+    } catch (error) {
+        throw error;
+    }
+}
+
 async function getDayLessons(datetime: string): Promise<Lesson[]> {
     try {
         return await axiosService.get(ENDPOINT, { datetime });
@@ -60,4 +68,5 @@ export const lessonService = {
     updateLesson,
     deleteLesson,
     getUserByFullname,
+    getUpcomingLessons,
 };

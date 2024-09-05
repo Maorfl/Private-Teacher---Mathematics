@@ -20,7 +20,9 @@ const Navigation: FunctionComponent<NavigationProps> = ({ user, setUser }) => {
 
     return (
         <>
-            <nav className="flex w-full items-center flex-wrap bg-teal-500 py-3 px-3" dir="rtl">
+            <nav
+                className="flex fixed w-full items-center flex-wrap bg-teal-500 py-3 px-3 z-50 transition duration-1000 ease-linear animate-dropdown"
+                dir="rtl">
                 <div className="block lg:hidden flex-1">
                     <button
                         onClick={handleClick}
@@ -37,23 +39,28 @@ const Navigation: FunctionComponent<NavigationProps> = ({ user, setUser }) => {
                 </div>
 
                 <div
-                    className={`w-full items-center flex-grow lg:flex lg:items-center lg:w-auto ${
-                        isCollapsed ? "hidden" : "block"
+                    className={`w-full items-center flex-grow lg:flex lg:items-center lg:w-auto transition-all duration-500 ease-in-out ${
+                        isCollapsed ? "hidden" : "block animate-dropdown"
                     }`}>
                     <div className="flex justify-between items-center w-full">
                         <div className="flex w-full lg:justify-center items-start lg:flex-row flex-col">
-                            <NavLink to={"/"} className="text-lg lg:mt-0 text-teal-200 hover:text-white mt-1">
+                            <NavLink
+                                to={"/"}
+                                onClick={() => setIsCollapsed(true)}
+                                className="text-lg lg:mt-0 text-teal-200 hover:text-white mt-1">
                                 דף הבית
                             </NavLink>
                             {user && (
                                 <NavLink
                                     to={"/appointment"}
+                                    onClick={() => setIsCollapsed(true)}
                                     className="text-lg lg:mt-0 text-teal-200 hover:text-white lg:mr-5 mt-1">
                                     קביעת שיעור
                                 </NavLink>
                             )}
                             <NavLink
                                 to={"/contact"}
+                                onClick={() => setIsCollapsed(true)}
                                 className="text-lg lg:mt-0 text-teal-200 hover:text-white lg:mr-5 mt-1">
                                 צור קשר
                             </NavLink>

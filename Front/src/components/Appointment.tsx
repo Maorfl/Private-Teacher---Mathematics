@@ -252,7 +252,7 @@ const Appointment: FunctionComponent<AppointmentProps> = ({ user }) => {
 
     useEffect(() => {
         (async () => {
-            const events = await lessonService.getLessons();
+            const events = await lessonService.getUpcomingLessons();
             calendar.events.set(events);
         })();
     }, [isChanged]);
@@ -260,7 +260,7 @@ const Appointment: FunctionComponent<AppointmentProps> = ({ user }) => {
     return (
         <>
             {user ? (
-                <>
+                <div className="pt-20">
                     <ScheduleXCalendar calendarApp={calendar} />
                     <Modal show={selectModalShow} onHide={handleSelectClose}>
                         <div dir="rtl">
@@ -459,7 +459,7 @@ const Appointment: FunctionComponent<AppointmentProps> = ({ user }) => {
                             </Modal.Footer>
                         </div>
                     </Modal>
-                </>
+                </div>
             ) : (
                 <>
                     <h1 className="text-center">לא מחובר</h1>

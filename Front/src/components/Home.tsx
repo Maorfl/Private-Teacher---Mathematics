@@ -14,7 +14,7 @@ const Home: FunctionComponent<HomeProps> = ({ user }) => {
 
     return (
         <>
-            <div className="w-full bg-blue-100">
+            <div className="w-full bg-blue-100 pt-10">
                 <div className="flex flex-col items-center about" style={{ backgroundImage: `url(${background})` }}>
                     <div className="h-48 w-48 mt-32">
                         <img src={michus} alt={"Michus"} className="-translate-y-32" />
