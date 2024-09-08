@@ -1,3 +1,5 @@
+/* eslint-disable no-useless-catch */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import User from "../interfaces/User";
 import axiosService from "./axiosService";
 
@@ -12,24 +14,22 @@ export const authService = {
     signup,
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function saveToSessionStorage(key: string, val: any): void {
-    sessionStorage[key] = JSON.stringify(val);
+function saveToLocalStorage(key: string, val: any): void {
+    localStorage[key] = JSON.stringify(val);
 }
 
 function getLoggedInUser(): User | null {
-    return JSON.parse(sessionStorage.getItem(STORAGE_KEY) as string);
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) as string);
 }
 
 function logout(): void {
-    sessionStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(STORAGE_KEY);
 }
 
-async function login(email: string): Promise<User> {
-    // eslint-disable-next-line no-useless-catch
+async function login(phone: string): Promise<User> {
     try {
-        const loggedInUser: User = await axiosService.post(`${ENDPOINT}/login`, { email });
-        if (loggedInUser) saveToSessionStorage(STORAGE_KEY, loggedInUser);
+        const loggedInUser: User = await axiosService.post(`${ENDPOINT}/login`, { phone });
+        if (loggedInUser) saveToLocalStorage(STORAGE_KEY, loggedInUser);
 
         return loggedInUser;
     } catch (error) {
@@ -37,10 +37,12 @@ async function login(email: string): Promise<User> {
     }
 }
 
-async function signup(userDetails: User): Promise<void> {
+async function signup(userDetails: User): Promise<User> {
     try {
-        const loggedInUser: User = await axiosService.post(`${ENDPOINT}/signup`, userDetails);
-        saveToSessionStorage(STORAGE_KEY, loggedInUser);
+        const signedUpUser: User = await axiosService.post(`${ENDPOINT}/signup`, userDetails);
+        if (signedUpUser) saveToLocalStorage(STORAGE_KEY, signedUpUser);
+
+        return signedUpUser;
     } catch (error) {
         throw new Error("Could not signup");
     }

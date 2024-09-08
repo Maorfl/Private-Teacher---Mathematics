@@ -260,7 +260,7 @@ const Appointment: FunctionComponent<AppointmentProps> = ({ user }) => {
     return (
         <>
             {user ? (
-                <div className="pt-20">
+                <div className="pt-16">
                     <ScheduleXCalendar calendarApp={calendar} />
                     <Modal show={selectModalShow} onHide={handleSelectClose}>
                         <div dir="rtl">

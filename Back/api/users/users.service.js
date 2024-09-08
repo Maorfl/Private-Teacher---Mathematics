@@ -1,23 +1,12 @@
 const User = require("../../models/User");
-const jwt = require("jsonwebtoken");
 require("dotenv").config();
-
-const JWT_SECRET = process.env.JWT;
-
-async function getUserByEmail(email) {
-    try {
-        const user = await User.findOne({ email: { $regex: email, $options: "i" } });
-        if (!user) throw new Error("אימייל שגוי");
-
-        return user;
-    } catch (error) {
-        throw Error("משתמש לא קיים");
-    }
-}
 
 async function getUserByPhone(phone) {
     try {
-        const user = await User.findOne({ phone: { $regex: phone, $options: "i" } });
+        const user = await User.findOne({ phone: { $regex: phone, $options: "i" } })
+            .select("-_id")
+            .select("-__v");
+        if (!user) throw new Error("טלפון לא קיים במערכת!");
 
         return user;
     } catch (error) {
@@ -25,25 +14,19 @@ async function getUserByPhone(phone) {
     }
 }
 
-async function signUp(email, password, fullname, phone, isAdmin) {
+async function signUp(fullname, phone, isAdmin) {
     try {
-        const existingUser = await User.findOne({ email: { $regex: email, $options: "i" } }).select("-password");
+        const existingUser = await User.findOne({ phone: { $regex: phone, $options: "i" } })
+            .select("-_id")
+            .select("-__v");
 
         if (existingUser) {
             throw new Error("משתמש כבר קיים");
         }
 
-        const passwordJSON = {
-            password: password,
-        };
-
-        const passwordToken = jwt.sign(passwordJSON, JWT_SECRET);
-
         const newUser = new User({
-            email,
-            password: passwordToken,
-            fullname,
             phone,
+            fullname,
             isAdmin,
         });
 
@@ -53,11 +36,9 @@ async function signUp(email, password, fullname, phone, isAdmin) {
     }
 }
 
-async function login(email) {
+async function login(phone) {
     try {
-        const user = await getUserByEmail(email);
-
-        jwt.verify(user.password, JWT_SECRET);
+        const user = await getUserByPhone(phone);
 
         return user;
     } catch (error) {
@@ -67,7 +48,7 @@ async function login(email) {
 
 async function updateUser(userId, chatId) {
     try {
-        const user = await User.findById(userId);
+        const user = await User.findById(userId).select("-_id").select("-__v");
         if (!user) return;
 
         user.chatId = chatId;
@@ -79,7 +60,6 @@ async function updateUser(userId, chatId) {
 }
 
 module.exports = {
-    getUserByEmail,
     getUserByPhone,
     signUp,
     login,

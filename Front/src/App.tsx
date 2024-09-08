@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 
 function App() {
-    const [user, setUser] = useState<User | null>(JSON.parse(sessionStorage.getItem("userInfo") as string));
+    const [user, setUser] = useState<User | null>(JSON.parse(localStorage.getItem("userInfo") as string));
 
     useEffect(() => {}, [user]);
 

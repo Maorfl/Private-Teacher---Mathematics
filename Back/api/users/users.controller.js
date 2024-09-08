@@ -1,11 +1,10 @@
-const userService = require('./users.service');
+const userService = require("./users.service");
 
-
-async function getUserByEmail(req, res) {
+async function getUserByPhone(req, res) {
     try {
-        const email = req.body;
+        const phone = req.body;
 
-        const user = await userService.getUserByEmail(email);
+        const user = await userService.getUserByPhone(phone);
 
         res.json(user);
     } catch (err) {
@@ -15,8 +14,8 @@ async function getUserByEmail(req, res) {
 
 async function signUp(req, res) {
     try {
-        const { email, password, fullname, phone, isAdmin} = req.body;
-        const user = await userService.signUp(email, password, fullname, phone, isAdmin);
+        const { fullname, phone, isAdmin } = req.body;
+        const user = await userService.signUp(fullname, phone, isAdmin);
 
         res.json(user);
     } catch (err) {
@@ -26,8 +25,8 @@ async function signUp(req, res) {
 
 async function login(req, res) {
     try {
-        const { email } = req.body;
-        const user = await userService.login(email);
+        const { phone } = req.body;
+        const user = await userService.login(phone);
 
         res.json(user);
     } catch (err) {
@@ -36,7 +35,7 @@ async function login(req, res) {
 }
 
 module.exports = {
-    getUserByEmail,
+    getUserByPhone,
     signUp,
-    login
-}
+    login,
+};

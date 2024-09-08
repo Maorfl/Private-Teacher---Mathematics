@@ -103,7 +103,7 @@ const Contact: FunctionComponent<ContactProps> = () => {
                 <FontAwesomeIcon
                     icon={faWhatsapp}
                     className="text-5xl text-green-500 cursor-pointer"
-                    onClickCapture={() => window.open(`https://wa.me/972587091995?text=${message}`)}
+                    onClickCapture={() => window.open(`https://wa.me/972504656736?text=${message}`)}
                 />
             </div>
         </>
