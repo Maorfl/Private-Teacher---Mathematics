@@ -2,7 +2,7 @@ const userService = require("./users.service");
 
 async function getUserByPhone(req, res) {
     try {
-        const phone = req.body;
+        const { phone } = req.body;
 
         const user = await userService.getUserByPhone(phone);
 
